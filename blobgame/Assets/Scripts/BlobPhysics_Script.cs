@@ -31,16 +31,19 @@ public class BlobPhysics_Script : MonoBehaviour {
 		Mesh mesh = texturePlane.GetComponent<MeshFilter>().mesh;
 		Vector3[] vertices = mesh.vertices;
 		int i = 0;
+		float dist = 0;
+		Vector3 nodeDisplacement = Vector3.up;
         while (i < vertices.Length) {
-			for(int x = 0; x < 6; x++){
-			//int x  = 1;
-				float dist = Mathf.Sqrt(Mathf.Pow((oldVertices[i].x - nodes[x].transform.localPosition.x), 2) + Mathf.Pow((oldVertices[i].y - nodes[x].transform.localPosition.y), 2) + Mathf.Pow((oldVertices[i].z - nodes[x].transform.localPosition.z), 2));
-				Vector3 nodeDisplacement = nodes[x].transform.localPosition - oldNodePositions[x];
-				nodeDisplacement = new Vector3(nodeDisplacement.x, 0f, nodeDisplacement.z);
+			//for(int x = 0; x < 6; x++){
+			int x  = 0;
+				dist = Mathf.Sqrt(Mathf.Pow((oldVertices[i].x - nodes[x].transform.localPosition.x), 2) + Mathf.Pow((oldVertices[i].y - nodes[x].transform.localPosition.y), 2) + Mathf.Pow((oldVertices[i].z - nodes[x].transform.localPosition.z), 2));
+				nodeDisplacement = nodes[x].transform.localPosition - oldNodePositions[x];
+				nodeDisplacement = new Vector3(nodeDisplacement.x, 0f, nodeDisplacement.y);
 				vertices[i] = oldVertices[i] + (nodeDisplacement);
-			}
+			//}
             i++;
         }
+		Debug.Log(nodeDisplacement);
         mesh.vertices = vertices;
         mesh.RecalculateBounds();
 	}
