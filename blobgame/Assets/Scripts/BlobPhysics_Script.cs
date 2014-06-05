@@ -12,30 +12,38 @@ public class BlobPhysics_Script : MonoBehaviour {
 	public GameObject node5;
 	public GameObject node6;
 	
-	private Vector3 node1Pos;
+	Vector3[] oldVertices;
+	Vector3[] oldNodePositions;
 	
-	Vector3[] verticesOrg;
+	GameObject[] nodes;
 
 	// Use this for initialization
 	void Start () {
-		node1Pos = node1.transform.localPosition;
-		
 		Mesh mesh = texturePlane.GetComponent<MeshFilter>().mesh;
-		verticesOrg = mesh.vertices;
+		oldVertices = mesh.vertices;
+		
+		nodes = new GameObject[6] {node1, node2, node3, node4, node5, node6};
+		oldNodePositions = new Vector3[6] {node1.transform.localPosition, node2.transform.localPosition, node3.transform.localPosition, node4.transform.localPosition, node5.transform.localPosition, node6.transform.localPosition};
 	}
 	
-	// Update is called once per frame
+	// Update is called once per frame0
 	void Update () {
 		Mesh mesh = texturePlane.GetComponent<MeshFilter>().mesh;
 		Vector3[] vertices = mesh.vertices;
 		int i = 0;
+		float dist = 0;
+		Vector3 nodeDisplacement = Vector3.up;
         while (i < vertices.Length) {
-			float dist = Mathf.Sqrt(Mathf.Pow((vertices[i].x - node1.transform.position.x), 2f) + Mathf.Pow((vertices[i].y - node1.transform.position.x), 2f) + Mathf.Pow((vertices[i].z - node1.transform.position.z), 2f))/10f;
-            vertices[i] = vertices[i] /*+ (node1.transform.localPosition - node1Pos) * Time.deltaTime*/;
-			Vector3 disp = node1.transform.localPosition - node1Pos;
-			Debug.Log(disp);
+			//for(int x = 0; x < 6; x++){
+			int x  = 0;
+				dist = Mathf.Sqrt(Mathf.Pow((oldVertices[i].x - nodes[x].transform.localPosition.x), 2) + Mathf.Pow((oldVertices[i].y - nodes[x].transform.localPosition.y), 2) + Mathf.Pow((oldVertices[i].z - nodes[x].transform.localPosition.z), 2));
+				nodeDisplacement = nodes[x].transform.localPosition - oldNodePositions[x];
+				nodeDisplacement = new Vector3(nodeDisplacement.x, 0f, nodeDisplacement.y);
+				vertices[i] = oldVertices[i] + (nodeDisplacement);
+			//}
             i++;
         }
+		Debug.Log(nodeDisplacement);
         mesh.vertices = vertices;
         mesh.RecalculateBounds();
 	}
