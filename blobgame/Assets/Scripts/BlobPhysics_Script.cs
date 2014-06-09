@@ -37,26 +37,21 @@ public class BlobPhysics_Script : MonoBehaviour {
 		Vector3[] vertices = mesh.vertices;
 		int i = 0;
 		float dist = 0;
-		Vector3 nodeDisplacement = Vector3.up;
+		Vector3 nodeDisplacement = new Vector3(0f, 0f, 0f);
         while (i < vertices.Length) {
-			for(int x = 0; x < 7; x++){
-			//int x  = 0;
-				dist = Mathf.Sqrt(Mathf.Pow((oldVertices[i].x - nodes[x].transform.localPosition.x), 2) + Mathf.Pow((oldVertices[i].y - nodes[x].transform.localPosition.y), 2) + Mathf.Pow((oldVertices[i].z - nodes[x].transform.localPosition.z), 2));
-				//Debug.Log("originalDist: " + originalDist);
-				//Debug.Log("cenpos: " + node7.transform.position + "nodepos: " + nodes[x].transform.position);
-				Vector3 v = node7.transform.position - nodes[x].transform.position;
-				//Debug.Log("v: " + v);
-				Vector3 u = Vector3.Normalize(v);
-				//Debug.Log("u: " + u);
-				Vector3 result = nodes[x].transform.position + (originalDist * u);
-				//Debug.Log("result: " + result);
-				result = nodes[x].transform.position - result;
-				//Debug.Log("result: " + result);
-				nodeDisplacement = new Vector3(result.x, 0f, result.y);
-				//Debug.Log("nodeDisplacement: " + nodeDisplacement);
+			Vector3 displacement = new Vector3(0f, 0f, 0f);
+			for(int x = 0; x < 6; x++){
+				dist = Mathf.Sqrt(Mathf.Pow((vertices[i].x - nodes[x].transform.localPosition.x), 2) + Mathf.Pow((vertices[i].y - nodes[x].transform.localPosition.y), 2) + Mathf.Pow((vertices[i].z - nodes[x].transform.localPosition.z), 2));
 				
-				vertices[i] = oldVertices[i] + (nodeDisplacement * dist);
+				Vector3 v = nodes[x].transform.position - node7.transform.position;
+				Vector3 u = Vector3.Normalize(v);
+				Vector3 result = nodes[x].transform.position - (originalDist * u);
+				result = result - nodes[x].transform.position;//should be zero when nodes have not moved
+				nodeDisplacement = new Vector3(result.x, 0f, result.y);
+				
+				displacement += (nodeDisplacement * (dist/5f));
 			}
+			vertices[i] = oldVertices[i] + displacement;
             i++;
         }
         mesh.vertices = vertices;
