@@ -45,8 +45,8 @@ public class BlobPhysics_Script : MonoBehaviour {
 				
 				Vector3 v = nodes[x].transform.position - node7.transform.position;
 				Vector3 u = Vector3.Normalize(v);
-				Vector3 result = nodes[x].transform.position - (originalDist * u);
-				result = result - nodes[x].transform.position;//should be zero when nodes have not moved
+				Vector3 result = node7.transform.position + (originalDist * u);
+				result = result - (nodes[x].transform.position);//should be zero when nodes have not moved
 				nodeDisplacement = new Vector3(result.x, 0f, result.y);
 				
 				displacement += (nodeDisplacement * (dist/5f));
