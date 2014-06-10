@@ -38,15 +38,18 @@ public class BlobPhysics_Script : MonoBehaviour {
 		int i = 0;
 		float dist = 0;
 		Vector3 nodeDisplacement = new Vector3(0f, 0f, 0f);
+		
         while (i < vertices.Length) {
+			
 			Vector3 displacement = new Vector3(0f, 0f, 0f);
+			
 			for(int x = 0; x < 6; x++){
 				dist = Mathf.Sqrt(Mathf.Pow((vertices[i].x - nodes[x].transform.localPosition.x), 2) + Mathf.Pow((vertices[i].y - nodes[x].transform.localPosition.y), 2) + Mathf.Pow((vertices[i].z - nodes[x].transform.localPosition.z), 2));
 				
 				Vector3 v = nodes[x].transform.position - node7.transform.position;
 				Vector3 u = Vector3.Normalize(v);
 				Vector3 result = node7.transform.position + (originalDist * u);
-				result = result - (nodes[x].transform.position);//should be zero when nodes have not moved
+				result = result - (nodes[x].transform.position);
 				nodeDisplacement = new Vector3(result.x, 0f, result.y);
 				
 				displacement += (nodeDisplacement * (dist/5f));
